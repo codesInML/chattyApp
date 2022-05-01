@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  chatty-ui:
+    build:
+      context: ./chatty
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - chatty-api
+
+  chatty-api:
+    stdin_open: true
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: chatty-api
+    depends_on:
+      - mongo
+    ports:
+      - "4000:3000"
+    restart: always
+  
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=ifeoluwa@codesinml.com
+      - MONGO_INITDB_ROOT_PASSWORD=justALongStringOfText
+    volumes:
+      - mongo-db:/data/db
+
+volumes:
+  mongo-db:
