@@ -6,10 +6,18 @@ services:
       args:
         NODE_ENV: development
     volumes:
-      - ./:/app
-      - ignore:/app/node_modules/
+      - ./server:/app
+      - ignoreAPI:/app/node_modules/
     environment:
       - NODE_ENV=development
     command: npm run dev
+
+  chatty-ui:
+    build:
+      context: ./chatty
+    volumes:
+      - ./chatty:/app
+      - ignoreUI:/app/node_modules/
 volumes:
-  ignore:
+  ignoreAPI:
+  ignoreUI:

@@ -3,7 +3,9 @@ FROM node:alpine
 WORKDIR /app
 
 # COPY package.json and package-lock.json files
-COPY package.json ./
+COPY package*.json ./
+
+RUN ls
 
 ARG NODE_ENV
 RUN if [ "$NODE_ENV" = "development" ]; \
@@ -20,10 +22,9 @@ COPY . .
 # COPY ENV variable
 COPY .env ./
 
-RUN npx prisma generate
-
 # Run and expose the server on port 3000
 EXPOSE 3000
 
+RUN ls
 # A command to start the server
 CMD npm start

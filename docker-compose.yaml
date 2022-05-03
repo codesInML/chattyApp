@@ -1,33 +1,48 @@
 version: "3.9"
 services:
   chatty-ui:
+    stdin_open: true
     build:
       context: ./chatty
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
+    container_name: chatty-ui
     ports:
-      - '3000:3000'
+      - "3000:3000"
     depends_on:
       - chatty-api
+    networks:
+      - chatty-app
 
   chatty-api:
     stdin_open: true
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
     container_name: chatty-api
     depends_on:
       - mongo
     ports:
-      - "4000:3000"
+      - "4000:4000"
     restart: always
+    networks:
+      - chatty-app
   
   mongo:
     image: mongo
+    container_name: mongo
+    env_file:
+      - ./server/.env
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=ifeoluwa@codesinml
-      - MONGO_INITDB_ROOT_PASSWORD=justALongStringOfText
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongo-db:/data/db
+    networks:
+      - chatty-app
 
 volumes:
   mongo-db:
+
+networks:
+  chatty-app:
+    driver: bridge
