@@ -9,13 +9,6 @@
     "dev": "nodemon --legacy-watch --watch './src/**/*.ts' --exec 'ts-node' ./src/index.ts",
     "start": "node ./build/index.js"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": [
-      "./src/test/setup.ts"
-    ]
-  },
   "author": "Ifeoluwa Olubo",
   "license": "ISC",
   "dependencies": {
@@ -40,7 +33,6 @@
     "@types/cookie-session": "^2.0.44",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
-    "@types/express-rate-limit": "^6.0.0",
     "@types/jest": "^27.4.1",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.23",

@@ -3,10 +3,8 @@ import {
   registerUserController,
   loginController,
   signOutController,
-  currentUser,
 } from "../controllers";
 import { validateRequestMiddleware } from "../helpers";
-import { currentUserMiddleware } from "../middleware";
 import { registerUserSchema, loginSchema } from "../schema/auth";
 
 const router = Router();
@@ -27,8 +25,5 @@ router
 
 // sign out route
 router.route("/signout").get(signOutController);
-
-// current user route
-router.route("/current-user").get(currentUserMiddleware, currentUser);
 
 export { router as authenticationRoutes };

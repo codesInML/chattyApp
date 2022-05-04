@@ -1,4 +1,5 @@
 import app from "./app";
+import { prisma } from "./client";
 import Logger from "./logger";
 const PORT = process.env.PORT || 3000;
 
@@ -8,12 +9,12 @@ const start = async () => {
     throw new Error("JWT must be defined");
   }
   try {
-    // Logger.info("connected to the database")
+    Logger.info("Connected to Database");
     app.listen(PORT, () => {
       Logger.info(`Server started on port ${PORT}`);
     });
   } catch (err) {
-    // log.error("could not connect to the database", err)
+    Logger.error(err);
     process.exit(1);
   }
 };

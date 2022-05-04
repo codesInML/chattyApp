@@ -1,5 +1,21 @@
 version: "3.9"
 services:
+  chatty-db:
+    image: postgres:14.2-alpine
+    container_name: chatty-db
+    hostname: chatty-db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - chatty-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - chatty-app
+
   chatty-ui:
     stdin_open: true
     build:
@@ -19,30 +35,15 @@ services:
       context: ./server
       dockerfile: ./Dockerfile
     container_name: chatty-api
-    depends_on:
-      - mongo
     ports:
       - "4000:4000"
     restart: always
     networks:
       - chatty-app
-  
-  mongo:
-    image: mongo
-    container_name: mongo
-    env_file:
-      - ./server/.env
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-    volumes:
-      - mongo-db:/data/db
-    networks:
-      - chatty-app
-
-volumes:
-  mongo-db:
 
 networks:
   chatty-app:
     driver: bridge
+
+volumes:
+  chatty-data:

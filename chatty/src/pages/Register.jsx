@@ -71,10 +71,10 @@ export default function Register() {
         password,
       });
 
-      if (data.status === false) {
+      if (data.message === "failed") {
         toast.error(data.msg, toastOptions);
       }
-      if (data.status === true) {
+      if (data.message === "success") {
         localStorage.setItem(
           process.env.REACT_APP_LOCALHOST_KEY,
           JSON.stringify(data.user)
@@ -90,7 +90,7 @@ export default function Register() {
         <form action="" onSubmit={(event) => handleSubmit(event)}>
           <div className="brand">
             <img src={Logo} alt="logo" />
-            <h1>snappy</h1>
+            <h1>Chatty</h1>
           </div>
           <input
             type="text"
