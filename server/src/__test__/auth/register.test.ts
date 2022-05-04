@@ -11,6 +11,7 @@ describe("Register A User", () => {
         fullName: "John Doe",
         email: "john@doe.com",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(201);
   });
@@ -22,6 +23,7 @@ describe("Register A User", () => {
         fullName: "John Doe",
         email: "john@doe.com",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(201);
 
@@ -35,6 +37,7 @@ describe("Register A User", () => {
         fullName: "John Doe",
         email: "john",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(400);
   });
@@ -46,6 +49,7 @@ describe("Register A User", () => {
         fullName: "John Doe",
         email: "john@doe.com",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(201);
 
@@ -55,6 +59,7 @@ describe("Register A User", () => {
         fullName: "Jane Doe",
         email: "john@doe.com",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(400);
   });
@@ -66,6 +71,19 @@ describe("Register A User", () => {
         fullName: "John Doe",
         email: "john@doe.com",
         password: "joh",
+        confirmPassword: "joh",
+      })
+      .expect(400);
+  });
+
+  it("returns 400 with a passwords does not match", async () => {
+    await request
+      .post("/api/v1/auth/register")
+      .send({
+        fullName: "John Doe",
+        email: "john@doe.com",
+        password: "johnDoe",
+        confirmPassword: "johnDoe123",
       })
       .expect(400);
   });
@@ -76,6 +94,7 @@ describe("Register A User", () => {
       .send({
         email: "john@doe.com",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(400);
 
@@ -84,6 +103,7 @@ describe("Register A User", () => {
       .send({
         fullName: "John Doe",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(400);
 
@@ -92,6 +112,16 @@ describe("Register A User", () => {
       .send({
         fullName: "John Doe",
         email: "john@doe.com",
+        confirmPassword: "johnDoe123",
+      })
+      .expect(400);
+
+    await request
+      .post("/api/v1/auth/register")
+      .send({
+        fullName: "John Doe",
+        email: "john@doe.com",
+        password: "johnDoe123",
       })
       .expect(400);
   });

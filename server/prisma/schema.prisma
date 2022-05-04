@@ -17,4 +17,6 @@ model User {
   password    String
   isAvatarSet Boolean? @default(false)
   avatar      String?  @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

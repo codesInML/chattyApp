@@ -12,25 +12,27 @@ describe("Signin a User", () => {
         fullName: "John Doe",
         email: "john@doe.com",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(201);
 
     await request
       .post("/api/v1/auth/signin")
       .send({
-        email: "john",
+        email: "johnDoe@gmail.com",
         password: "johnDoe123",
       })
       .expect(400);
   });
 
-  it("should return 400 on incorrect password of buyer", async () => {
+  it("should return 400 on incorrect password of a user", async () => {
     await request
-      .post("/api/v1/auth/register-buyer")
+      .post("/api/v1/auth/register")
       .send({
         fullName: "John Doe",
         email: "john@doe.com",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(201);
 
@@ -45,11 +47,12 @@ describe("Signin a User", () => {
 
   it("should return a cookie header on successful signin", async () => {
     await request
-      .post("/api/v1/auth/register-buyer")
+      .post("/api/v1/auth/register")
       .send({
         fullName: "John Doe",
         email: "john@doe.com",
         password: "johnDoe123",
+        confirmPassword: "johnDoe123",
       })
       .expect(201);
 

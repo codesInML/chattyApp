@@ -1,13 +1,26 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { generateJWT, successResponse } from "../helpers";
+import { generateJWT, Password, successResponse } from "../helpers";
 import { BadRequestError } from "../errors";
-import { createUser } from "../services";
+import { createUser, findUser } from "../services";
 
 // @desc    Login Users
 // @route   POST    /api/v1/auth/signin
 export const loginController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+
+  const user = await findUser(email);
+
+  if (!user) throw new BadRequestError("Invalid credentials");
+
+  const isPasswordMatch = await Password.comparePassword(
+    password,
+    user.password
+  );
+
+  if (!isPasswordMatch) throw new BadRequestError("Invalid credentials");
+
+  generateJWT(req, { id: user.id, email: user.email });
 
   return successResponse(req, res, StatusCodes.OK);
 };
@@ -15,7 +28,6 @@ export const loginController = async (req: Request, res: Response) => {
 // @desc    Sign Out Users
 // @route   GET   /api/v1/auth/signout
 export const signOutController = async (req: Request, res: Response) => {
-  // for normal jwt session
   req.session = null;
 
   return successResponse(req, res, StatusCodes.OK);
@@ -24,12 +36,30 @@ export const signOutController = async (req: Request, res: Response) => {
 // @desc    Register a user
 // @route   POST    /api/v1/auth/register
 export const registerUserController = async (req: Request, res: Response) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password, avatar, isAvatarSet } = req.body;
 
-  const data = await createUser({ fullName, email, password });
+  const data = await createUser({
+    fullName,
+    email,
+    password,
+    avatar,
+    isAvatarSet,
+  });
 
-  // // Generate the JWT and attach it to the req session object
-  // generateJWT(req, { id: data.id, email: data.email, type: data.type });
+  // Generate the JWT and attach it to the req session object
+  generateJWT(req, { id: data.id, email: data.email });
 
   return successResponse(req, res, StatusCodes.CREATED, data);
+};
+
+// @desc    Fetches the current user
+// @route   GET   /api/v1/auth/signin
+export const currentUser = async (req: Request, res: Response) => {
+  if (!req.currentUser) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({ currentUser: null });
+  }
+
+  return res
+    .status(StatusCodes.OK)
+    .json({ message: "success", currentUser: req.currentUser });
 };

@@ -16,7 +16,6 @@ export const errorHandlerMiddleware = async (
     return res.status(err.statusCode).json({ errors: err.serializeErrors() });
   }
 
-  Logger.error(err);
   // Prisma related errors
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === "P2002") {
@@ -37,6 +36,8 @@ export const errorHandlerMiddleware = async (
       .status(StatusCodes.BAD_REQUEST)
       .json({ errors: [{ message: "please fill out all fields" }] });
   }
+
+  Logger.error(err);
 
   // Other uncaught errors
   return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
