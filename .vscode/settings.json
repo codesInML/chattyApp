@@ -1,7 +1,10 @@
 {
-    "cSpell.words": [
-        "datasources",
-        "signin",
-        "signout"
-    ]
+  "cSpell.words": [
+    "datasources",
+    "httponly",
+    "signin",
+    "signout",
+    "signup",
+    "toastify"
+  ]
 }

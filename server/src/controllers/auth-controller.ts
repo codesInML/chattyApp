@@ -56,7 +56,7 @@ export const registerUserController = async (req: Request, res: Response) => {
 // @route   GET   /api/v1/auth/signin
 export const currentUser = async (req: Request, res: Response) => {
   if (!req.currentUser) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ currentUser: null });
+    return res.status(StatusCodes.OK).json({ currentUser: null });
   }
 
   return res

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 import Logo from "../asset/logo.svg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { registerRoute } from "../utils/APIRoutes";
+import { currentUserRoute, registerRoute } from "../utils/APIRoutes";
 
 export default function Register() {
-  const navigate = useNavigate();
+  let navigate = useNavigate();
   const toastOptions = {
     position: "bottom-right",
     autoClose: 8000,
@@ -16,72 +16,44 @@ export default function Register() {
     draggable: true,
     theme: "dark",
   };
+
   const [values, setValues] = useState({
-    username: "",
+    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-//   useEffect(() => {
-//     if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
-//       navigate("/");
-//     }
-//   }, []);
+  useEffect(() => {
+    async function checkCurrentUser () {
+      try {
+        const {data} = await axios.get(currentUserRoute, {withCredentials: true})
+        
+        if (data.currentUser != null) {
+          navigate("/")
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    checkCurrentUser()
+  })
 
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
 
-  const handleValidation = () => {
-    const { password, confirmPassword, username, email } = values;
-    if (password !== confirmPassword) {
-      toast.error(
-        "Password and confirm password should be same.",
-        toastOptions
-      );
-      return false;
-    } else if (username.length < 3) {
-      toast.error(
-        "Username should be greater than 3 characters.",
-        toastOptions
-      );
-      return false;
-    } else if (password.length < 8) {
-      toast.error(
-        "Password should be equal or greater than 8 characters.",
-        toastOptions
-      );
-      return false;
-    } else if (email === "") {
-      toast.error("Email is required.", toastOptions);
-      return false;
-    }
-
-    return true;
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (handleValidation()) {
-      const { email, username, password } = values;
-      const { data } = await axios.post(registerRoute, {
-        username,
-        email,
-        password,
-      });
 
-      if (data.message === "failed") {
-        toast.error(data.msg, toastOptions);
-      }
-      if (data.message === "success") {
-        localStorage.setItem(
-          process.env.REACT_APP_LOCALHOST_KEY,
-          JSON.stringify(data.user)
-        );
+      try {
+        const { data } = await axios.post(registerRoute, values, {withCredentials: true});
+
+        console.log(data)
         navigate("/");
+      } catch (error) {
+        error.response.data.errors.map(err => toast.error(err.message, toastOptions));
       }
-    }
   };
 
   return (
@@ -94,12 +66,12 @@ export default function Register() {
           </div>
           <input
             type="text"
-            placeholder="Username"
-            name="username"
+            placeholder="Full name"
+            name="fullName"
             onChange={(e) => handleChange(e)}
           />
           <input
-            type="email"
+            type="text"
             placeholder="Email"
             name="email"
             onChange={(e) => handleChange(e)}

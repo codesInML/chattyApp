@@ -22,7 +22,7 @@ app.set("trust proxy", 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(xssClean());
 app.use(rateLimiter({ windowMs: 60 * 1000, max: 60 }));
 
