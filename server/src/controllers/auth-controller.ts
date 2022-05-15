@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { generateJWT, Password, successResponse } from "../helpers";
 import { BadRequestError } from "../errors";
-import { createUser, findUser } from "../services";
+import { createUser, findUser, setAvatarService } from "../services";
 
 // @desc    Login Users
 // @route   POST    /api/v1/auth/signin
@@ -53,8 +53,8 @@ export const registerUserController = async (req: Request, res: Response) => {
 };
 
 // @desc    Fetches the current user
-// @route   GET   /api/v1/auth/signin
-export const currentUser = async (req: Request, res: Response) => {
+// @route   GET   /api/v1/auth/current-user
+export const currentUserController = async (req: Request, res: Response) => {
   if (!req.currentUser) {
     return res.status(StatusCodes.OK).json({ currentUser: null });
   }
@@ -62,4 +62,15 @@ export const currentUser = async (req: Request, res: Response) => {
   return res
     .status(StatusCodes.OK)
     .json({ message: "success", currentUser: req.currentUser });
+};
+
+// @desc    Sets the user's avatar
+// @route   Post   /api/v1/auth/set-avatar
+export const setAvatarController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { image } = req.body;
+
+  const updatedUser = await setAvatarService(id, image);
+
+  return successResponse(req, res, StatusCodes.OK, updatedUser);
 };

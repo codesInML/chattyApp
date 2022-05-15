@@ -3,10 +3,11 @@ import {
   registerUserController,
   loginController,
   signOutController,
-  currentUser,
+  currentUserController,
+  setAvatarController,
 } from "../controllers";
 import { validateRequestMiddleware } from "../helpers";
-import { currentUserMiddleware } from "../middleware";
+import { currentUserMiddleware, requireAuthMiddleware } from "../middleware";
 import { registerUserSchema, loginSchema } from "../schema/auth";
 
 const router = Router();
@@ -29,6 +30,11 @@ router
 router.route("/signout").get(signOutController);
 
 // current user route
-router.route("/current-user").get(currentUserMiddleware, currentUser);
+router.route("/current-user").get(currentUserMiddleware, currentUserController);
+
+// set user's avatar
+router
+  .route("/set-avatar/:id")
+  .post(currentUserMiddleware, requireAuthMiddleware, setAvatarController);
 
 export { router as authenticationRoutes };

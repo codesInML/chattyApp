@@ -22,30 +22,38 @@ export default function SetAvatar() {
   };
 
   const setProfilePicture = async () => {
-    if (selectedAvatar === undefined) {
-      toast.error("Please select an avatar", toastOptions);
-    } else {
-      const user = await axios.get(currentUserRoute,{withCredentials: true})
-
-      const { data } = await axios.post(`${setAvatarRoute}/${user.id}`, {
-        image: avatars[selectedAvatar],
-      },  {withCredentials: true});
-
-      if (data.isSet) {
-        user.isAvatarImageSet = true;
-        user.avatarImage = data.image;
-        localStorage.setItem(
-          process.env.REACT_APP_LOCALHOST_KEY,
-          JSON.stringify(user)
-        );
-        navigate("/");
+    try {
+      if (selectedAvatar === undefined) {
+        toast.error("Please select an avatar", toastOptions);
       } else {
-        toast.error("Error setting avatar. Please try again.", toastOptions);
+        const {data: {currentUser}} = await axios.get(currentUserRoute,{withCredentials: true})
+  
+        const { data: {data} } = await axios.post(`${setAvatarRoute}/${currentUser.id}`, {
+          image: avatars[selectedAvatar],
+        },  {withCredentials: true});
+  
+        return data.isAvatarSet ? navigate("/") : toast.error("Error setting avatar. Please try again.", toastOptions);
       }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.", toastOptions);
     }
   };
 
   useEffect(() => {
+
+    async function checkCurrentUser () {
+      try {
+        const {data: {currentUser}} = await axios.get(currentUserRoute, {withCredentials: true})
+        
+        if (currentUser == null) {
+          navigate("/login")
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    checkCurrentUser()
+
     async function getAvatars () {
       const data = [];
       for (let i = 0; i < 3; i++) {

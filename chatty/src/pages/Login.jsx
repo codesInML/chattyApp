@@ -35,7 +35,7 @@ export default function Register() {
       }
     }
     checkCurrentUser()
-  })
+  }, [])
 
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });

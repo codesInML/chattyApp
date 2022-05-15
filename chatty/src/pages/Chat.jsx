@@ -19,7 +19,7 @@ const Chat = () => {
       }
     }
     checkCurrentUser()
-  })
+  }, [])
   return (
     <div>Chat</div>
   )

@@ -19,3 +19,13 @@ export const findUser = async (email: string): Promise<User | null> => {
     where: { email },
   });
 };
+
+export const setAvatarService = async (
+  id: string,
+  image: string
+): Promise<User> => {
+  return await prisma.user.update({
+    where: { id },
+    data: { avatar: image, isAvatarSet: true },
+  });
+};
