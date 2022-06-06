@@ -19,23 +19,25 @@ export default function Register() {
 
   const [values, setValues] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   useEffect(() => {
-    async function checkCurrentUser () {
+    async function checkCurrentUser() {
       try {
-        const {data} = await axios.get(currentUserRoute, {withCredentials: true})
-        
+        const { data } = await axios.get(currentUserRoute, {
+          withCredentials: true,
+        });
+
         if (data.currentUser != null) {
-          navigate("/")
+          navigate("/");
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
-    checkCurrentUser()
-  }, [])
+    checkCurrentUser();
+  }, []);
 
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
@@ -44,14 +46,16 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-      try {
-        const { data } = await axios.post(loginRoute, values, {withCredentials: true});
-
-        console.log(data)
-        navigate("/");
-      } catch (error) {
-        error.response.data.errors.map(err => toast.error(err.message, toastOptions));
-      }
+    try {
+      const { data } = await axios.post(loginRoute, values, {
+        withCredentials: true,
+      });
+      navigate("/");
+    } catch (error) {
+      error.response.data.errors.map((err) =>
+        toast.error(err.message, toastOptions)
+      );
+    }
   };
 
   return (

@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/Anis/Desktop/ifeoluwa/chatApp'
+docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build
+make: Leaving directory `/Users/Anis/Desktop/ifeoluwa/chatApp'
+ 

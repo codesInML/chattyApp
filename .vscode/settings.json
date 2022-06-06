@@ -5,6 +5,7 @@
     "signin",
     "signout",
     "signup",
-    "toastify"
+    "toastify",
+    "uuidv"
   ]
 }

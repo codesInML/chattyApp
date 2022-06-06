@@ -2,7 +2,13 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { generateJWT, Password, successResponse } from "../helpers";
 import { BadRequestError } from "../errors";
-import { createUser, findUser, setAvatarService } from "../services";
+import {
+  createUser,
+  findUser,
+  getAllUsersService,
+  getUserService,
+  setAvatarService,
+} from "../services";
 
 // @desc    Login Users
 // @route   POST    /api/v1/auth/signin
@@ -64,6 +70,7 @@ export const currentUserController = async (req: Request, res: Response) => {
     .json({ message: "success", currentUser: req.currentUser });
 };
 
+// TODO: Write tests for this
 // @desc    Sets the user's avatar
 // @route   Post   /api/v1/auth/set-avatar
 export const setAvatarController = async (req: Request, res: Response) => {
@@ -73,4 +80,20 @@ export const setAvatarController = async (req: Request, res: Response) => {
   const updatedUser = await setAvatarService(id, image);
 
   return successResponse(req, res, StatusCodes.OK, updatedUser);
+};
+
+// TODO: Write tests for this
+// @desc    Get all users
+// @route   Get   /api/v1/auth/users
+export const getAllUsersController = async (req: Request, res: Response) => {
+  const users = await getAllUsersService(req.currentUser?.id!);
+  return successResponse(req, res, StatusCodes.OK, users);
+};
+
+// TODO: Write tests for this
+// @desc    Get a particular user
+// @route   Get   /api/v1/auth/user
+export const getUserController = async (req: Request, res: Response) => {
+  const user = await getUserService(req.currentUser?.id!);
+  return successResponse(req, res, StatusCodes.OK, user);
 };

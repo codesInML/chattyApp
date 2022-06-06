@@ -29,3 +29,32 @@ export const setAvatarService = async (
     data: { avatar: image, isAvatarSet: true },
   });
 };
+
+export const getAllUsersService = async (
+  id: string
+): Promise<ReturnedUser[]> => {
+  const users: ReturnedUser[] = await prisma.user.findMany({
+    where: {
+      NOT: {
+        id,
+      },
+    },
+  });
+
+  return users.map((user): ReturnedUser => {
+    delete user.password;
+    return user;
+  });
+};
+export const getUserService = async (
+  id: string
+): Promise<ReturnedUser | null> => {
+  const user: ReturnedUser | null = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (user) delete user.password;
+  return user;
+};

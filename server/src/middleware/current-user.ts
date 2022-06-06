@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import Logger from "../logger";
 
 interface UserPayload {
   id: string;
@@ -31,6 +32,8 @@ export const currentUserMiddleware = (
     ) as UserPayload;
 
     req.currentUser = payload;
-  } catch (error) {}
+  } catch (error) {
+    Logger.error(error);
+  }
   next();
 };
